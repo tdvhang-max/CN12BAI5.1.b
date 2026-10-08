@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHT 2B: Chuyên Gia Trồng Bằng Cây Con</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                        },
+                        accent: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 10px 25px -5px rgba(99, 102, 241, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.1)',
+                        'float': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: transparent;
+            overscroll-behavior-y: contain; 
+        }
+
+        /* Animated Background Blobs */
+        .animate-blob {
+            animation: blob 10s infinite alternate;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        
+        .draggable-item {
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .drop-zone {
+            transition: all 0.2s ease;
+        }
+
+        .drop-zone.drag-over {
+            background-color: #eef2ff;
+            border-color: #818cf8;
+            transform: scale(1.02);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #818cf8; 
+        }
+
+        .radio-custom:checked + div {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+        }
+        .radio-custom:checked + div .radio-icon {
+            color: #6366f1;
+            transform: scale(1.1);
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-animate {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-24 min-h-screen relative">
+    
+    <!-- Animated Background -->
+    <div class="fixed inset-0 w-full h-full -z-10 bg-gradient-to-br from-indigo-100 via-purple-100 to-teal-100 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-300/50 mix-blend-multiply filter blur-3xl animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[45%] h-[45%] rounded-full bg-teal-300/50 mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-indigo-300/50 mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+    </div>
+
+    <main class="max-w-3xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+        
+        <!-- Header Card -->
+        <header class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-[0_8px_32px_0_rgba(99,102,241,0.15)] border-2 border-white/80 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-300 to-accent-300 rounded-full blur-3xl opacity-30 -mr-10 -mt-10"></div>
+            <div class="relative z-10 text-center mb-6">
+                <span class="inline-block px-3 py-1 bg-brand-100 text-brand-700 rounded-full text-sm font-bold mb-3 tracking-wider">
+                    MÔN CÔNG NGHỆ 12 - LÂM NGHIỆP
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600 uppercase">
+                    PHT 2B: Chuyên gia trồng bằng cây con
+                </h1>
+                <p class="text-slate-500 mt-2 font-medium text-sm sm:text-base">Bài 5: Kĩ thuật trồng và chăm sóc rừng</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                <div class="flex flex-col">
+                    <label class="text-xs font-bold text-brand-600 uppercase mb-1 ml-1">Họ và tên</label>
+                    <input type="text" id="studentName" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/70 focus:bg-white focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition outline-none" placeholder="Nhập họ tên...">
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-xs font-bold text-brand-600 uppercase mb-1 ml-1">Lớp</label>
+                    <input type="text" id="studentClass" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/70 focus:bg-white focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition outline-none" placeholder="VD: 12A1">
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-xs font-bold text-brand-600 uppercase mb-1 ml-1">Nhóm</label>
+                    <input type="text" id="studentGroup" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/70 focus:bg-white focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition outline-none" placeholder="Số nhóm">
+                </div>
+            </div>
+        </header>
+
+        <!-- Task 1: Lựa chọn cây giống và thời vụ -->
+        <section class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-card border-2 border-white/80 border-t-4 border-t-blue-500 hover:-translate-y-1 transition-transform duration-300 relative">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fas fa-search"></i></div>
+                Nhiệm vụ 1: Lựa chọn cây giống và thời vụ
+            </h2>
+            
+            <div class="space-y-8">
+                <!-- Câu 1 -->
+                <div>
+                    <p class="text-slate-700 mb-3 font-semibold"><span class="font-bold text-brand-600">Câu 1:</span> Đâu là cây giống đạt tiêu chuẩn để xuất vườn đem trồng rừng?</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q1_answer" value="A" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">A. Lá vàng, có vết sâu bệnh</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q1_answer" value="B" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">B. Cây còi cọc, thân yếu ớt</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q1_answer" value="C" class="peer sr-only radio-custom" data-correct="true">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">C. Khỏe mạnh, thân thẳng, lá xanh</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q1_answer" value="D" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">D. Lá rách, gãy ngọn</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Câu 2 -->
+                <div>
+                    <p class="text-slate-700 mb-3 font-semibold"><span class="font-bold text-brand-600">Câu 2:</span> Thời vụ trồng rừng chính ở các tỉnh miền Bắc nước ta là vào thời gian nào?</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q2_answer" value="A" class="peer sr-only radio-custom" data-correct="true">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">A. Mùa xuân và mùa thu</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q2_answer" value="B" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">B. Mùa hè nắng nóng</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q2_answer" value="C" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">C. Mùa đông giá rét</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q2_answer" value="D" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">D. Quanh năm, không phụ thuộc mùa</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Câu 3 -->
+                <div>
+                    <p class="text-slate-700 mb-3 font-semibold"><span class="font-bold text-brand-600">Câu 3:</span> Mục đích chính của việc bón lót trước khi trồng cây rừng là gì?</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q3_answer" value="A" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">A. Để tiêu diệt toàn bộ sâu bệnh</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q3_answer" value="B" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">B. Ngăn chặn sự phát triển của cỏ dại</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q3_answer" value="C" class="peer sr-only radio-custom">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">C. Giúp giữ độ ẩm cho đất lâu hơn</span>
+                            </div>
+                        </label>
+                        <label class="relative block cursor-pointer">
+                            <input type="radio" name="t1_q3_answer" value="D" class="peer sr-only radio-custom" data-correct="true">
+                            <div class="p-3 rounded-xl border-2 border-slate-100 hover:border-brand-200 transition-all flex items-center gap-3 bg-white/50">
+                                <i class="far fa-circle text-slate-300 text-lg radio-icon transition-colors"></i>
+                                <span class="font-medium text-sm">D. Cung cấp dinh dưỡng ban đầu cho cây</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 2: Sắp xếp quy trình (Kéo thả Hình & Chữ) -->
+        <section class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-card border-2 border-white/80 border-t-4 border-t-indigo-500 hover:-translate-y-1 transition-transform duration-300 relative">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center"><i class="fas fa-sort-amount-down"></i></div>
+                Nhiệm vụ 2: Sắp xếp quy trình trồng bằng cây con có bầu
+            </h2>
+            <p class="text-slate-600 text-sm mb-4"><i class="fas fa-info-circle mr-1 text-indigo-500"></i> Kéo thẻ <b>Hình ảnh minh họa</b> và <b>Tên bước</b> thả vào đúng vị trí của quy trình từ 1 đến 6.</p>
+            
+            <!-- Pools -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Image Pool -->
+                <div class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-200 border-dashed drop-zone pool-zone flex flex-wrap gap-3 justify-center min-h-[110px]" id="t2-img-pool" data-pool="t2-img-pool">
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="4" id="img-4">
+                        <img src="buoc_4.png" alt="Bước 4" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc4'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">4</span>
+                    </div>
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="1" id="img-1">
+                        <img src="buoc_1.png" alt="Bước 1" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc1'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">1</span>
+                    </div>
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="6" id="img-6">
+                        <img src="buoc_6.png" alt="Bước 6" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc6'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">6</span>
+                    </div>
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="3" id="img-3">
+                        <img src="buoc_3.png" alt="Bước 3" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc3'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">3</span>
+                    </div>
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="5" id="img-5">
+                        <img src="buoc_5.png" alt="Bước 5" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc5'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">5</span>
+                    </div>
+                    <div class="draggable-item w-20 h-20 bg-white rounded-xl shadow-sm border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-brand-400 hover:text-brand-500 transition-colors overflow-hidden relative" draggable="true" data-type="image" data-answer="2" id="img-2">
+                        <img src="buoc_2.png" alt="Bước 2" class="w-full h-full object-cover p-1 pointer-events-none" onerror="this.src='https://placehold.co/80x80/e2e8f0/475569?text=Buoc2'">
+                        <span class="absolute bottom-0 right-1 text-[10px] font-bold text-slate-600 bg-white/90 px-1 rounded-tl">2</span>
+                    </div>
+                </div>
+
+                <!-- Text Pool -->
+                <div class="bg-purple-50/70 p-4 rounded-2xl border border-purple-200 border-dashed drop-zone pool-zone flex flex-wrap gap-2 justify-center content-start min-h-[110px]" id="t2-text-pool" data-pool="t2-text-pool">
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="6" id="txt-6">Vun gốc</div>
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="2" id="txt-2">Chuẩn bị cây giống</div>
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="5" id="txt-5">Nén đất</div>
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="1" id="txt-1">Chuẩn bị hố</div>
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="4" id="txt-4">Lấp đất</div>
+                    <div class="draggable-item bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 font-semibold text-brand-700 text-sm hover:shadow-md transition-shadow text-center" draggable="true" data-type="text" data-answer="3" id="txt-3">Đặt cây/bầu</div>
+                </div>
+            </div>
+
+            <!-- Target Slots (Grid Layout) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <!-- Step 1 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 1</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-1"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-1"></div>
+                </div>
+                <!-- Step 2 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 2</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-2"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-2"></div>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 3</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-3"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-3"></div>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 4</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-4"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-4"></div>
+                </div>
+                <!-- Step 5 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 5</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-5"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-5"></div>
+                </div>
+                <!-- Step 6 -->
+                <div class="bg-white/60 border border-slate-200 rounded-2xl p-3 flex flex-col gap-2 shadow-sm">
+                    <div class="text-center font-bold text-indigo-600 text-xs uppercase tracking-wider">Bước 6</div>
+                    <div class="flex-1 bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-24 flex items-center justify-center p-1" data-accept="image" data-pool="t2-img-pool" id="slot-img-6"></div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-xl drop-zone single-slot h-10 flex items-center justify-center p-1" data-accept="text" data-pool="t2-text-pool" id="slot-text-6"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 3: Đánh giá thao tác (Đúng / Sai mở rộng) -->
+        <section class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-card border-2 border-white/80 border-t-4 border-t-emerald-500 hover:-translate-y-1 transition-transform duration-300 relative">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="fas fa-check-double"></i></div>
+                Nhiệm vụ 3: Đánh giá thao tác trồng và chăm sóc rừng
+            </h2>
+            
+            <div class="space-y-4">
+                <!-- Item 1 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">1. Bóc/rạch vỏ bầu trước khi đặt vào hố</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q1" data-correct="true">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">2. Đập vỡ bầu đất để rễ nhanh đâm ra ngoài</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q2" data-correct="false">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">3. Lấp và nén đất chặt quanh gốc cây</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q3" data-correct="true">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">4. Để rễ trần phơi nắng trước khi trồng để rễ cứng cáp</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q4" data-correct="false">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">5. Số lần chăm sóc rừng ở năm đầu tiên thường ít hơn các năm sau</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q5" data-correct="false">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+                <!-- Item 6 -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/60 rounded-xl border border-slate-200 gap-3 shadow-sm">
+                    <span class="font-semibold text-slate-700">6. Trồng dặm nhằm bù đắp cây chết, đảm bảo mật độ rừng</span>
+                    <div class="flex gap-2 shrink-0 tf-group" data-id="q6" data-correct="true">
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="true">Đúng</button>
+                        <button type="button" class="tf-btn flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-100 transition-all shadow-sm" data-val="false">Sai</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 4: Phân loại Ưu - Hạn chế (Click Chọn thẻ & Click Nhóm) -->
+        <section class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-card border-2 border-white/80 border-t-4 border-t-amber-500 hover:-translate-y-1 transition-transform duration-300 relative">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2 relative z-10">
+                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center"><i class="fas fa-balance-scale"></i></div>
+                Nhiệm vụ 4: Phân loại đặc điểm trồng rừng bằng cây con có bầu
+            </h2>
+            <p class="text-slate-600 text-sm mb-4 relative z-10"><i class="fas fa-mouse-pointer mr-1 text-amber-500"></i> <b>Chạm/Click vào 1 thẻ</b> bên dưới, sau đó <b>chạm/click vào cột tương ứng (Ưu điểm hoặc Hạn chế)</b> để di chuyển thẻ vào cột đó.</p>
+
+            <!-- Pool of items (Clickable) -->
+            <div class="bg-amber-50/50 p-4 rounded-2xl mb-6 border border-amber-200 border-dashed min-h-[90px] flex flex-wrap gap-2 justify-center items-center" id="t4-pool" data-pool="t4-pool">
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-p1" data-type="pro">
+                    <i class="fas fa-seedling text-amber-500"></i> Tỉ lệ sống cao
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-c1" data-type="con">
+                    <i class="fas fa-coins text-slate-400"></i> Chi phí tạo cây giống cao
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-p2" data-type="pro">
+                    <i class="fas fa-clock text-amber-500"></i> Rút ngắn thời gian sinh trưởng
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-c2" data-type="con">
+                    <i class="fas fa-truck text-slate-400"></i> Tốn nhiều công vận chuyển
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-p3" data-type="pro">
+                    <i class="fas fa-shield-alt text-amber-500"></i> Bộ rễ không bị tổn thương khi trồng
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-c3" data-type="con">
+                    <i class="fas fa-box-open text-slate-400"></i> Tốn chi phí nguyên vật liệu túi bầu
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-p4" data-type="pro">
+                    <i class="fas fa-cloud-sun text-amber-500"></i> Thích ứng nhiều điều kiện thời tiết
+                </div>
+                <div class="clickable-item bg-white px-4 py-2.5 rounded-xl shadow-sm border-2 border-slate-200 font-semibold text-slate-700 flex items-center gap-2 text-sm hover:border-amber-400 transition-all cursor-pointer select-none" id="t4-c4" data-type="con">
+                    <i class="fas fa-tools text-slate-400"></i> Kĩ thuật đóng bầu phức tạp hơn
+                </div>
+            </div>
+
+            <!-- Target Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                <!-- Cột Ưu điểm -->
+                <div class="bg-emerald-50/80 border-2 border-emerald-200 rounded-2xl p-4 flex flex-col cursor-pointer hover:bg-emerald-100/70 transition-colors target-zone shadow-sm" data-target="pros" id="zone-pros">
+                    <h3 class="font-bold text-emerald-700 text-center mb-3 flex items-center justify-center gap-2 pointer-events-none">
+                        <i class="fas fa-thumbs-up"></i> ƯU ĐIỂM
+                    </h3>
+                    <div class="flex-1 min-h-[140px] flex flex-col gap-2 p-2 border-2 border-dashed border-emerald-300 rounded-xl bg-white/50 pointer-events-none" id="list-pros"></div>
+                </div>
+
+                <!-- Cột Hạn chế -->
+                <div class="bg-rose-50/80 border-2 border-rose-200 rounded-2xl p-4 flex flex-col cursor-pointer hover:bg-rose-100/70 transition-colors target-zone shadow-sm" data-target="cons" id="zone-cons">
+                    <h3 class="font-bold text-rose-700 text-center mb-3 flex items-center justify-center gap-2 pointer-events-none">
+                        <i class="fas fa-thumbs-down"></i> HẠN CHẾ
+                    </h3>
+                    <div class="flex-1 min-h-[140px] flex flex-col gap-2 p-2 border-2 border-dashed border-rose-300 rounded-xl bg-white/50 pointer-events-none" id="list-cons"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="button" onclick="resetTask4()" class="text-sm text-slate-500 hover:text-amber-700 font-semibold transition-colors">
+                    <i class="fas fa-undo text-xs mr-1"></i> Đặt lại tất cả thẻ về khay
+                </button>
+            </div>
+        </section>
+
+        <!-- Task 5: Chuyên gia giải thích -->
+        <section class="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-card border-2 border-white/80 border-t-4 border-t-violet-500 hover:-translate-y-1 transition-transform duration-300 relative">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center"><i class="fas fa-lightbulb"></i></div>
+                Nhiệm vụ 5: Chuyên gia giải thích kiến thức
+            </h2>
+            
+            <div class="space-y-6">
+                <!-- Câu 1 -->
+                <div>
+                    <p class="text-slate-700 font-semibold mb-2">Câu 1: Vì sao khi trồng cây có bầu, ta tuyệt đối không được làm vỡ bầu đất?</p>
+                    <textarea id="t5-q1-answer" class="w-full h-24 p-4 rounded-xl border border-slate-300 bg-white/70 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition outline-none resize-none" placeholder="Nhập câu trả lời của em tại đây..."></textarea>
+                    <div id="t5-q1-feedback" class="mt-2 p-3 rounded-lg text-sm font-medium hidden"></div>
+                </div>
+
+                <!-- Câu 2 -->
+                <div>
+                    <p class="text-slate-700 font-semibold mb-2">Câu 2: Trong các công việc chăm sóc rừng, thao tác "Làm cỏ, vun gốc" có tác dụng gì đối với cây mới trồng?</p>
+                    <textarea id="t5-q2-answer" class="w-full h-24 p-4 rounded-xl border border-slate-300 bg-white/70 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition outline-none resize-none" placeholder="Nhập câu trả lời của em tại đây..."></textarea>
+                    <div id="t5-q2-feedback" class="mt-2 p-3 rounded-lg text-sm font-medium hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 justify-center mt-8">
+            <button type="button" onclick="resetForm()" class="px-8 py-3 rounded-full font-bold text-slate-600 bg-white/80 border-2 border-slate-300 hover:bg-slate-100 transition-all shadow-sm">
+                <i class="fas fa-undo-alt mr-2"></i> LÀM LẠI
+            </button>
+            <button type="button" onclick="submitForm()" class="px-10 py-3 rounded-full font-bold text-white bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-700 hover:to-accent-700 transition-all shadow-card hover:shadow-float transform hover:-translate-y-0.5">
+                <i class="fas fa-paper-plane mr-2"></i> NỘP BÀI
+            </button>
+        </div>
+    </main>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative modal-animate text-center">
+            <button type="button" onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center transition">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div id="scoreCircle" class="w-32 h-32 mx-auto rounded-full border-8 border-brand-100 flex items-center justify-center mb-6 relative">
+                <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="8" class="text-brand-500" stroke-dasharray="289" stroke-dashoffset="289" id="scoreSvgCircle" style="transition: stroke-dashoffset 1.5s ease-out;"></circle>
+                </svg>
+                <div class="text-center relative z-10">
+                    <span class="text-4xl font-extrabold text-brand-600" id="scoreText">0</span>
+                    <span class="text-lg font-bold text-brand-600">%</span>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-slate-800 mb-2" id="scoreTitle">Hoàn thành!</h3>
+            <p class="text-slate-500 mb-6" id="scoreMessage">Cảm ơn em đã hoàn thành phiếu học tập.</p>
+            
+            <button type="button" onclick="closeModal()" class="w-full py-3 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-md">
+                Xem lại bài làm
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- DRAG AND DROP LOGIC (Task 2) ---
+        function initDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable-item');
+            const dropzones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(item => {
+                item.setAttribute('draggable', 'true');
+                
+                // HTML5 Drag Events
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.id);
+                    setTimeout(() => item.classList.add('opacity-40'), 0);
+                });
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('opacity-40');
+                });
+
+                // Touch Events for Mobile Dragging
+                let clone = null;
+                item.addEventListener('touchstart', (e) => {
+                    if(e.touches.length > 1) return;
+                    const touch = e.touches[0];
+                    
+                    clone = item.cloneNode(true);
+                    clone.id = clone.id + '-clone';
+                    clone.classList.add('fixed', 'opacity-90', 'pointer-events-none', 'z-50', 'scale-105', 'shadow-xl');
+                    clone.style.width = item.offsetWidth + 'px';
+                    
+                    const updateClonePosition = (x, y) => {
+                        clone.style.left = (x - item.offsetWidth / 2) + 'px';
+                        clone.style.top = (y - item.offsetHeight / 2) + 'px';
+                    };
+                    updateClonePosition(touch.clientX, touch.clientY);
+                    
+                    document.body.appendChild(clone);
+                    item.classList.add('opacity-30');
+                    e.preventDefault();
+                }, {passive: false});
+
+                item.addEventListener('touchmove', (e) => {
+                    if (!clone) return;
+                    const touch = e.touches[0];
+                    clone.style.left = (touch.clientX - clone.offsetWidth / 2) + 'px';
+                    clone.style.top = (touch.clientY - clone.offsetHeight / 2) + 'px';
+                    
+                    dropzones.forEach(z => z.classList.remove('drag-over'));
+                    const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropzone = elementUnder ? elementUnder.closest('.drop-zone') : null;
+                    if(dropzone) dropzone.classList.add('drag-over');
+                    
+                    e.preventDefault();
+                }, {passive: false});
+
+                item.addEventListener('touchend', (e) => {
+                    if (!clone) return;
+                    const touch = e.changedTouches[0];
+                    clone.remove();
+                    clone = null;
+                    item.classList.remove('opacity-30');
+                    dropzones.forEach(z => z.classList.remove('drag-over'));
+
+                    const elementUnder = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const dropzone = elementUnder ? elementUnder.closest('.drop-zone') : null;
+                    
+                    if (dropzone) {
+                        handleDropAction(item, dropzone);
+                    }
+                });
+            });
+
+            dropzones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('drag-over');
+                });
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const id = e.dataTransfer.getData('text/plain');
+                    const item = document.getElementById(id);
+                    if (item) handleDropAction(item, zone);
+                });
+            });
+        }
+
+        function handleDropAction(item, zone) {
+            if (zone.dataset.accept && item.dataset.type !== zone.dataset.accept) {
+                return; 
+            }
+            
+            if (zone.classList.contains('single-slot') && zone.children.length > 0) {
+                const existingItem = zone.children[0];
+                const poolId = zone.dataset.pool;
+                const pool = document.getElementById(poolId);
+                if(pool) pool.appendChild(existingItem);
+            }
+            
+            if(zone.classList.contains('pool-zone')) {
+                zone.appendChild(item);
+                item.classList.remove('w-full');
+            } else {
+                zone.appendChild(item);
+                if(zone.classList.contains('single-slot')) {
+                    item.classList.add('w-full', 'h-full');
+                }
+            }
+        }
+
+        // --- TASK 4: CLICK SELECT & MOVE ---
+        let selectedTask4Item = null;
+
+        function initClickAndMove() {
+            const clickableItems = document.querySelectorAll('.clickable-item');
+            const targetZones = document.querySelectorAll('.target-zone');
+            
+            clickableItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+
+                    // If item is already inside a column, clicking it returns it to the pool
+                    if (this.parentElement.id !== 't4-pool') {
+                        document.getElementById('t4-pool').appendChild(this);
+                        this.classList.remove('w-full');
+                        if (selectedTask4Item === this) {
+                            this.classList.remove('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                            selectedTask4Item = null;
+                        }
+                        return;
+                    }
+
+                    // Toggle selection
+                    if (selectedTask4Item === this) {
+                        this.classList.remove('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                        selectedTask4Item = null;
+                        return;
+                    }
+
+                    if (selectedTask4Item) {
+                        selectedTask4Item.classList.remove('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                    }
+
+                    selectedTask4Item = this;
+                    this.classList.add('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                });
+            });
+
+            targetZones.forEach(zone => {
+                zone.addEventListener('click', function() {
+                    if (selectedTask4Item) {
+                        const targetListId = this.dataset.target === 'pros' ? 'list-pros' : 'list-cons';
+                        const targetList = document.getElementById(targetListId);
+
+                        targetList.appendChild(selectedTask4Item);
+                        selectedTask4Item.classList.add('w-full');
+                        selectedTask4Item.classList.remove('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                        selectedTask4Item = null;
+                    }
+                });
+            });
+        }
+        
+        function resetTask4() {
+            const pool = document.getElementById('t4-pool');
+            ['list-pros', 'list-cons'].forEach(listId => {
+                const list = document.getElementById(listId);
+                while(list.children.length > 0) {
+                    const item = list.children[0];
+                    item.classList.remove('w-full');
+                    pool.appendChild(item);
+                }
+            });
+            if (selectedTask4Item) {
+                selectedTask4Item.classList.remove('ring-4', 'ring-amber-300', 'border-amber-500', 'bg-amber-50');
+                selectedTask4Item = null;
+            }
+        }
+
+        // --- TASK 3: TRUE/FALSE BUTTON LOGIC ---
+        function initTrueFalseButtons() {
+            document.querySelectorAll('.tf-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const group = this.closest('.tf-group');
+                    
+                    group.querySelectorAll('.tf-btn').forEach(b => {
+                        b.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'bg-rose-600', 'text-white', 'border-rose-600', 'shadow-md');
+                        b.classList.add('bg-white', 'text-slate-600', 'border-slate-300');
+                    });
+                    
+                    this.classList.remove('bg-white', 'text-slate-600', 'border-slate-300');
+                    if(this.dataset.val === 'true') {
+                        this.classList.add('bg-emerald-600', 'text-white', 'border-emerald-600', 'shadow-md');
+                    } else {
+                        this.classList.add('bg-rose-600', 'text-white', 'border-rose-600', 'shadow-md');
+                    }
+                    
+                    group.dataset.selected = this.dataset.val;
+                });
+            });
+        }
+
+        // --- SCORING & SUBMISSION ---
+        function submitForm() {
+            let totalPoints = 0;
+            let maxPoints = 100;
+
+            // Task 1: 3 questions * 5 = 15 points
+            [1, 2, 3].forEach(q => {
+                const checked = document.querySelector(`input[name="t1_q${q}_answer"]:checked`);
+                if (checked && checked.dataset.correct === "true") {
+                    totalPoints += 5;
+                }
+            });
+
+            // Task 2: 12 elements * 2.5 = 30 points
+            for(let i=1; i<=6; i++) {
+                const imgSlot = document.getElementById('slot-img-' + i);
+                if(imgSlot && imgSlot.children.length > 0) {
+                    if(imgSlot.children[0].dataset.answer == i) totalPoints += 2.5;
+                }
+                const textSlot = document.getElementById('slot-text-' + i);
+                if(textSlot && textSlot.children.length > 0) {
+                    if(textSlot.children[0].dataset.answer == i) totalPoints += 2.5;
+                }
+            }
+
+            // Task 3: 6 questions * 2.5 = 15 points
+            document.querySelectorAll('.tf-group').forEach(group => {
+                if(group.dataset.selected === group.dataset.correct) {
+                    totalPoints += 2.5;
+                }
+            });
+
+            // Task 4: 8 items * 2.5 = 20 points
+            const listPros = document.getElementById('list-pros');
+            Array.from(listPros.children).forEach(item => {
+                if(item.dataset.type === 'pro') totalPoints += 2.5;
+            });
+            const listCons = document.getElementById('list-cons');
+            Array.from(listCons.children).forEach(item => {
+                if(item.dataset.type === 'con') totalPoints += 2.5;
+            });
+
+            // Task 5: 2 questions * 10 = 20 points
+            const t5q1Text = document.getElementById('t5-q1-answer').value.toLowerCase();
+            const keywordsQ1 = ['đứt rễ', 'tổn thương', 'rễ', 'héo', 'chết', 'tỉ lệ sống', 'không phát triển', 'động rễ', 'bảo vệ bộ rễ'];
+            let matchQ1 = 0;
+            keywordsQ1.forEach(kw => { if(t5q1Text.includes(kw)) matchQ1++; });
+
+            const t5q1Feedback = document.getElementById('t5-q1-feedback');
+            t5q1Feedback.className = "mt-2 p-3 rounded-lg text-sm font-medium";
+            const taQ1 = document.getElementById('t5-q1-answer');
+            taQ1.classList.remove('border-rose-400', 'border-emerald-400', 'ring-1', 'ring-rose-400', 'ring-emerald-400');
+
+            if (matchQ1 >= 2) {
+                totalPoints += 10;
+                t5q1Feedback.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Chính xác! Tránh làm rễ tổn thương, đảm bảo tỉ lệ sống cao cho cây.';
+                t5q1Feedback.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
+                taQ1.classList.add('border-emerald-400', 'ring-1', 'ring-emerald-400');
+            } else if (t5q1Text.trim() === '') {
+                t5q1Feedback.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Em chưa nhập câu trả lời.';
+                t5q1Feedback.classList.add('bg-rose-50', 'text-rose-700', 'border', 'border-rose-200');
+                taQ1.classList.add('border-rose-400', 'ring-1', 'ring-rose-400');
+            } else {
+                t5q1Feedback.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Chưa đủ ý cốt lõi. Gợi ý: Ảnh hưởng đến bộ rễ non và tỉ lệ sống của cây?';
+                t5q1Feedback.classList.add('bg-amber-50', 'text-amber-700', 'border', 'border-amber-200');
+                taQ1.classList.add('border-rose-400', 'ring-1', 'ring-rose-400');
+            }
+
+            const t5q2Text = document.getElementById('t5-q2-answer').value.toLowerCase();
+            const keywordsQ2 = ['cạnh tranh', 'dinh dưỡng', 'ánh sáng', 'độ ẩm', 'giữ gốc', 'đổ ngã', 'tơi xốp', 'cỏ dại', 'bốc hơi'];
+            let matchQ2 = 0;
+            keywordsQ2.forEach(kw => { if(t5q2Text.includes(kw)) matchQ2++; });
+
+            const t5q2Feedback = document.getElementById('t5-q2-feedback');
+            t5q2Feedback.className = "mt-2 p-3 rounded-lg text-sm font-medium";
+            const taQ2 = document.getElementById('t5-q2-answer');
+            taQ2.classList.remove('border-rose-400', 'border-emerald-400', 'ring-1', 'ring-rose-400', 'ring-emerald-400');
+
+            if (matchQ2 >= 2) {
+                totalPoints += 10;
+                t5q2Feedback.innerHTML = '<i class="fas fa-check-circle mr-1"></i> Xuất sắc! Diệt cỏ tránh cạnh tranh dinh dưỡng và vun gốc giúp cây không bị đổ ngã.';
+                t5q2Feedback.classList.add('bg-emerald-50', 'text-emerald-700', 'border', 'border-emerald-200');
+                taQ2.classList.add('border-emerald-400', 'ring-1', 'ring-emerald-400');
+            } else if (t5q2Text.trim() === '') {
+                t5q2Feedback.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> Em chưa nhập câu trả lời.';
+                t5q2Feedback.classList.add('bg-rose-50', 'text-rose-700', 'border', 'border-rose-200');
+                taQ2.classList.add('border-rose-400', 'ring-1', 'ring-rose-400');
+            } else {
+                t5q2Feedback.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Chưa đủ ý. Gợi ý: Làm cỏ để hạn chế cạnh tranh dinh dưỡng với ai? Vun gốc để tránh điều gì?';
+                t5q2Feedback.classList.add('bg-amber-50', 'text-amber-700', 'border', 'border-amber-200');
+                taQ2.classList.add('border-rose-400', 'ring-1', 'ring-rose-400');
+            }
+
+            showResultModal(totalPoints, maxPoints);
+        }
+
+        function showResultModal(score, max) {
+            const modal = document.getElementById('resultModal');
+            const scoreText = document.getElementById('scoreText');
+            const scoreSvg = document.getElementById('scoreSvgCircle');
+            const scoreTitle = document.getElementById('scoreTitle');
+            const scoreMessage = document.getElementById('scoreMessage');
+            
+            const percentage = Math.round((score / max) * 100);
+            modal.classList.remove('hidden');
+            
+            let current = 0;
+            const timer = setInterval(() => {
+                current += 2;
+                if(current >= percentage) {
+                    current = percentage;
+                    clearInterval(timer);
+                }
+                scoreText.innerText = current;
+            }, 20);
+
+            setTimeout(() => {
+                const offset = 289 - (289 * percentage / 100);
+                scoreSvg.style.strokeDashoffset = offset;
+                
+                scoreSvg.classList.remove('text-brand-500', 'text-emerald-500', 'text-amber-500', 'text-rose-500');
+                if(percentage >= 80) {
+                    scoreSvg.classList.add('text-emerald-500');
+                    scoreText.className = "text-4xl font-extrabold text-emerald-600";
+                    scoreTitle.innerText = "Xuất sắc!";
+                    scoreMessage.innerText = "Em đã nắm rất vững kiến thức kĩ thuật trồng và chăm sóc rừng!";
+                } else if(percentage >= 50) {
+                    scoreSvg.classList.add('text-amber-500');
+                    scoreText.className = "text-4xl font-extrabold text-amber-600";
+                    scoreTitle.innerText = "Khá Tốt!";
+                    scoreMessage.innerText = "Em làm bài khá tốt, hãy xem lại một số thao tác nhỏ nhé.";
+                } else {
+                    scoreSvg.classList.add('text-rose-500');
+                    scoreText.className = "text-4xl font-extrabold text-rose-600";
+                    scoreTitle.innerText = "Cố gắng ôn tập thêm!";
+                    scoreMessage.innerText = "Hãy đọc lại SGK Công nghệ 12 Bài 5 và thử lại nhé.";
+                }
+            }, 100);
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            document.getElementById('scoreSvgCircle').style.strokeDashoffset = 289;
+        }
+
+        function resetForm() {
+            if(confirm("Em có chắc chắn muốn làm lại từ đầu không?")) {
+                document.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+                document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
+                
+                ['t5-q1', 't5-q2'].forEach(id => {
+                    document.getElementById(id + '-answer').value = '';
+                    document.getElementById(id + '-answer').classList.remove('border-rose-400', 'border-emerald-400', 'ring-1', 'ring-rose-400', 'ring-emerald-400');
+                    const fb = document.getElementById(id + '-feedback');
+                    fb.className = "mt-2 p-3 rounded-lg text-sm font-medium hidden";
+                });
+                
+                // Reset Task 2
+                const poolImg = document.getElementById('t2-img-pool');
+                const poolText = document.getElementById('t2-text-pool');
+                for(let i=1; i<=6; i++) {
+                    const imgSlot = document.getElementById('slot-img-' + i);
+                    if(imgSlot && imgSlot.children.length > 0) {
+                        const item = imgSlot.children[0];
+                        item.classList.remove('w-full', 'h-full');
+                        poolImg.appendChild(item);
+                    }
+                    const textSlot = document.getElementById('slot-text-' + i);
+                    if(textSlot && textSlot.children.length > 0) {
+                        const item = textSlot.children[0];
+                        item.classList.remove('w-full', 'h-full');
+                        poolText.appendChild(item);
+                    }
+                }
+
+                // Reset Task 3
+                document.querySelectorAll('.tf-group').forEach(group => {
+                    group.dataset.selected = "";
+                    group.querySelectorAll('.tf-btn').forEach(b => {
+                        b.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-600', 'bg-rose-600', 'border-rose-600', 'shadow-md');
+                        b.classList.add('bg-white', 'text-slate-600', 'border-slate-300');
+                    });
+                });
+
+                // Reset Task 4
+                resetTask4();
+                
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDragAndDrop();
+            initClickAndMove();
+            initTrueFalseButtons();
+        });
+    </script>
+</body>
+</html>
